@@ -7,8 +7,6 @@ namespace ConsoleApp2
 
         public int tid { get; set; }
         public string tname { get; set; }
-        public string frmstation { get; set; }
-        public int tostation { get; set; }
 
     }
     class Station
