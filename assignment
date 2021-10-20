@@ -1,0 +1,191 @@
+using System;
+using System.Collections.Generic;
+namespace ConsoleApp2
+{
+    class Train
+    {
+
+        public int tid { get; set; }
+        public string tname { get; set; }
+        public string frmstation { get; set; }
+        public int tostation { get; set; }
+
+    }
+    class Station
+    {
+
+        public string sname { get; set; }
+        public int sid { get; set; }
+
+    }
+    class TrainStationSchedule
+    {
+        public int tid { get; set; }
+        public int sid { get; set; }
+        public string arrival { get; set; }
+        public string departure { get; set; }
+        public string day { get; set; }
+
+    }
+    class Program
+
+    {
+        static void Main(string[] args)
+        {
+            Train t1 = new Train()
+            {
+                tid = 101,
+                tname = "garibrath"
+            };
+            Train t2 = new Train()
+            {
+                tid = 102,
+                tname = "howrah"
+            };
+            Train t3 = new Train()
+            {
+                tid = 103,
+                tname = "prasanthi"
+            };
+
+            Station s1 = new Station()
+            {
+                sid = 201,
+                sname = "vijaywada"
+            };
+            Station s2 = new Station()
+            {
+                sid = 202,
+                sname = "visakhapatnam"
+            };
+            Station s3 = new Station()
+            {
+                sid = 203,
+                sname = "hyderabad"
+            };
+            Station s4 = new Station()
+            {
+                sid = 204,
+                sname = "rajhmundry"
+            };
+            Station s5 = new Station()
+            {
+                sid = 205,
+                sname = "banglore"
+            };
+
+            TrainStationSchedule tss1 = new TrainStationSchedule()
+            {
+                tid = 101,
+                sid = 201,
+                arrival = "11:30",
+                departure = "12:30",
+                day = "Monday"
+            };
+            TrainStationSchedule tss2 = new TrainStationSchedule()
+            {
+                tid = 102,
+                sid = 202,
+                arrival = "11:30",
+                departure = "12:30",
+                day = "Tuesday"
+            };
+            TrainStationSchedule tss3 = new TrainStationSchedule()
+            {
+                tid = 103,
+                sid = 203,
+                arrival = "11:30",
+                departure = "12:30",
+                day = "Everyday"
+            };
+            TrainStationSchedule tss4 = new TrainStationSchedule()
+            {
+                tid = 103,
+                sid = 202,
+                arrival = "11:30",
+                departure = "12:30",
+                day = "Tuesday"
+            };
+
+            List<KeyValuePair<int, string>> trainList = new List<KeyValuePair<int, string>>();
+            trainList.Add(new KeyValuePair<int, string>(t1.tid, t1.tname));
+            trainList.Add(new KeyValuePair<int, string>(t2.tid, t2.tname));
+            trainList.Add(new KeyValuePair<int, string>(t3.tid, t3.tname));
+
+
+            List<KeyValuePair<int, string>> stationList = new List<KeyValuePair<int, string>>();
+            stationList.Add(new KeyValuePair<int, string>(s1.sid, s1.sname));
+            stationList.Add(new KeyValuePair<int, string>(s2.sid, s2.sname));
+            stationList.Add(new KeyValuePair<int, string>(s3.sid, s3.sname));
+            stationList.Add(new KeyValuePair<int, string>(s4.sid, s4.sname));
+            stationList.Add(new KeyValuePair<int, string>(s5.sid, s5.sname));
+
+            List<TrainStationSchedule> schList = new List<TrainStationSchedule>();
+            schList.Add(tss1);
+            schList.Add(tss2);
+            schList.Add(tss3);
+            schList.Add(tss4);
+
+            Console.WriteLine("Enter station name");
+            string stationName = Console.ReadLine();
+            int stationId = 0;
+            foreach (KeyValuePair<int, string> stationlistEntry in stationList)
+            {
+                if (stationlistEntry.Value.Equals(stationName))
+                {
+                    stationId = stationlistEntry.Key;
+                }
+            }
+            if(stationId == 0)
+            {
+                Console.WriteLine("No such station name exists");
+                return;
+            }
+
+            Console.WriteLine("Enter Date mm/dd/yyyy");
+            DateTime userDateTime;
+            if (DateTime.TryParse(Console.ReadLine(), out userDateTime))
+            {
+                Console.WriteLine("The day of the week is: " + userDateTime.DayOfWeek);
+            }
+            else
+            {
+                Console.WriteLine("You have entered an incorrect value.");
+                return;
+            }
+            Console.WriteLine("Enter Time HH:mm - 24hr format");
+            string time = Console.ReadLine();
+
+            List<int> resultList = new List<int>();
+            foreach (TrainStationSchedule entry in schList)
+            {
+                if(entry.day == userDateTime.DayOfWeek.ToString() || entry.day == "Everyday")
+                {
+                    if((DateTime.Parse(time) >= DateTime.Parse(entry.arrival) && DateTime.Parse(time)<=(DateTime.Parse(entry.departure).AddHours(1)))&&
+                        stationId == entry.sid)
+                    {
+                        resultList.Add(entry.tid);
+                    }
+                }
+            }
+            if (resultList.Count>0)
+            {
+                Console.WriteLine("Trains available are: \n");
+                foreach (int result in resultList)
+                {
+                    foreach (KeyValuePair<int, string> trainEntry in trainList)
+                    {
+                        if (trainEntry.Key == result)
+                        {
+                            Console.WriteLine(trainEntry.Value + "\n");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No trains are available");
+            }
+        }
+    }
+}
